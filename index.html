@@ -276,26 +276,75 @@
     </footer>
 
     <script>
-        document.getElementById("ano").textContent = new Date().getFullYear();
+     document.getElementById("ano").textContent = new Date().getFullYear();
+        
         function sendWhats(e) {
             e.preventDefault();
-            const t = `Olá, meu nome é ${nome.value}.
-Telefone: ${fone.value}
-Mensagem: ${msg.value || "Quero agendar um bronzeamento."}`;
-            window.open("https://wa.me/5511994221869?text=" + encodeURIComponent(t));
-        }
-
-        // Adiciona uma pequena margem no scroll se ainda estiver sobrepondo
-        document.addEventListener('DOMContentLoaded', function() {
-            const headerHeight = document.querySelector('header').offsetHeight;
-            document.documentElement.style.scrollPaddingTop = (headerHeight + 20) + 'px';
             
-            // Remove qualquer estilo inline das imagens que possa interferir
-            document.querySelectorAll('.gallery img').forEach(img => {
-                img.style.objectPosition = '';
+            // 1. MELHOR PRÁTICA: Pegar elementos de forma mais segura
+            const nome = document.getElementById('nome');
+            const fone = document.getElementById('fone');
+            const msg = document.getElementById('msg');
+            
+            // 2. VALIDAÇÃO EXTRA (opcional mas recomendado)
+            if (!nome.value.trim() || !fone.value.trim()) {
+                alert('Por favor, preencha nome e telefone.');
+                return;
+            }
+            
+            // 3. FORMATAR TELEFONE (remove não-numéricos)
+            const telefoneLimpo = fone.value.replace(/\D/g, '');
+            
+            // 4. MENSAGEM MAIS COMPLETA
+            const mensagem = `Olá, meu nome é ${nome.value.trim()}.
+            
+Telefone: ${telefoneLimpo}
+${msg.value.trim() ? 'Mensagem: ' + msg.value.trim() : 'Gostaria de agendar um horário para bronzeamento.'}
+
+*Este contato foi enviado através do site Bronze Perfeito*`;
+            
+            // 5. NÚMERO DO WHATSAPP (verifique se está correto)
+            const numeroWhatsApp = '5511994221869'; // (11) 99422-1869
+            
+            // 6. CODIFICAR URL CORRETAMENTE
+            const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
+            
+            // 7. Abrir em nova aba
+            window.open(url, '_blank');
+            
+            // 8. OPÇÃO: Limpar formulário após envio
+            nome.value = '';
+            fone.value = '';
+            msg.value = '';
+            
+            // 9. OPÇÃO: Mostrar mensagem de confirmação
+            alert('Redirecionando para o WhatsApp...');
+        }
+        
+        // 10. OPÇÃO: Máscara para telefone (melhora UX)
+        document.addEventListener('DOMContentLoaded', function() {
+            const foneInput = document.getElementById('fone');
+            
+            foneInput.addEventListener('input', function(e) {
+                let valor = e.target.value.replace(/\D/g, '');
+                
+                if (valor.length > 11) valor = valor.substring(0, 11);
+                
+                if (valor.length > 0) {
+                    if (valor.length <= 2) {
+                        valor = `(${valor}`;
+                    } else if (valor.length <= 7) {
+                        valor = `(${valor.substring(0,2)}) ${valor.substring(2)}`;
+                    } else {
+                        valor = `(${valor.substring(0,2)}) ${valor.substring(2,7)}-${valor.substring(7)}`;
+                    }
+                }
+                
+                e.target.value = valor;
             });
         });
     </script>
 
 </body>
 </html>
+
