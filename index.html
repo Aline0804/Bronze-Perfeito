@@ -15,13 +15,14 @@
             --text: #fff;
             --muted: #c9c9c9;
         }
+        
         html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 80px; /* Compensa a altura do header */
-}
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px; /* Aumentei para 90px */
+        }
 
-           section[id] {
-            scroll-margin-top: 80px;
+        section[id] {
+            scroll-margin-top: 90px; /* Aumentei para 90px */
         }
 
         * {
@@ -38,8 +39,11 @@
         header {
             position: sticky;
             top: 0;
-            background: rgba(0, 0, 0, .9);
+            background: rgba(0, 0, 0, .95); /* Aumentei a opacidade */
             border-bottom: 1px solid rgba(255, 255, 255, .08);
+            z-index: 1000; /* ADICIONEI ISSO - muito importante! */
+            backdrop-filter: blur(8px); /* Efeito de vidro */
+            padding: 5px 0; /* Pequeno padding extra */
         }
 
         .nav {
@@ -60,7 +64,8 @@
         nav a {
             color: var(--muted);
             margin-left: 14px;
-            text-decoration: none
+            text-decoration: none;
+            transition: color 0.3s;
         }
 
         nav a:hover {
@@ -74,12 +79,18 @@
             border-radius: 30px;
             font-weight: 700;
             text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
         }
 
         .wrap {
             max-width: 1100px;
             margin: auto;
-            padding: 40px 20px
+            padding: 40px 20px;
+            position: relative; /* Garante contexto de empilhamento */
         }
 
         .hero {
@@ -127,22 +138,22 @@
             }
         }
 
-       .gallery img {
-    width: 100%;
-    max-height: 300px; /* Altura máxima, não fixa */
-    height: auto; /* Altura se ajusta automaticamente */
-    object-fit: contain; /* ← Mostra imagem completa sem cortar */
-    object-position: center;
-    border-radius: 18px;
-    background: var(--card); /* Fundo harmonioso */
-    padding: 8px; /* Espaçamento interno */
-    
-    /* Dicas de otimização */
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    
-    filter: contrast(1.05) saturate(1.1);
-}
+        .gallery img {
+            width: 100%;
+            max-height: 300px;
+            height: auto;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 18px;
+            background: var(--card);
+            padding: 8px;
+            
+            /* Dicas de otimização */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            
+            filter: contrast(1.05) saturate(1.1);
+        }
 
         form input,
         form textarea {
@@ -159,7 +170,7 @@
             text-align: center;
             padding: 30px;
             color: #888;
-            font-size: 13px
+            font-size: 13px;
         }
 
         .whats {
@@ -172,6 +183,17 @@
             border-radius: 50px;
             font-weight: 700;
             text-decoration: none;
+            z-index: 999; /* Fica acima do conteúdo mas abaixo do header */
+            transition: transform 0.3s;
+        }
+
+        .whats:hover {
+            transform: scale(1.05);
+        }
+
+        /* Adicionando espaçamento extra para a primeira seção após o header */
+        .hero {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -220,9 +242,10 @@
         <section class="card" id="galeria" style="margin-top:40px">
             <h2>Galeria de Bronzeamento</h2>
             <div class="gallery">
+                <!-- REMOVI os estilos inline das imagens -->
                 <img src="https://lh3.googleusercontent.com/d/17YMGi4Ho_l90H6GXmUOEBnHFLng70a0b=w1000">
-                <img src="https://lh3.googleusercontent.com/d/1c6ph7jJI99UubIiJnMK8-N1Gy9M0mvJm=w1000" style="object-position:top">
-                <img src="https://lh3.googleusercontent.com/d/1dUjN_1zKiAjYwuNK20263NyrOCnbaCE9=w1000" style="object-position:center">
+                <img src="https://lh3.googleusercontent.com/d/1c6ph7jJI99UubIiJnMK8-N1Gy9M0mvJm=w1000">
+                <img src="https://lh3.googleusercontent.com/d/1dUjN_1zKiAjYwuNK20263NyrOCnbaCE9=w1000">
             </div>
         </section>
 
@@ -261,12 +284,18 @@ Telefone: ${fone.value}
 Mensagem: ${msg.value || "Quero agendar um bronzeamento."}`;
             window.open("https://wa.me/5511994221869?text=" + encodeURIComponent(t));
         }
+
+        // Adiciona uma pequena margem no scroll se ainda estiver sobrepondo
+        document.addEventListener('DOMContentLoaded', function() {
+            const headerHeight = document.querySelector('header').offsetHeight;
+            document.documentElement.style.scrollPaddingTop = (headerHeight + 20) + 'px';
+            
+            // Remove qualquer estilo inline das imagens que possa interferir
+            document.querySelectorAll('.gallery img').forEach(img => {
+                img.style.objectPosition = '';
+            });
+        });
     </script>
 
 </body>
-
-
 </html>
-
-
-
